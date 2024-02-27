@@ -8,9 +8,21 @@ export const GameProvider = ({albums, children}) => {
     const [roundsPlayed, setRoundsPlayed] = useState(0);
     const [isCorrect, setIsCorrect] = useState(false);
 
-    const selectRandomAlbum = () => {
-        const randomindex = Math.floor(Math.random() * albums.length);
-        setCurrentAlbum(albums[randomindex]);
+    const fetchAlbumCover = async (albumId) => {
+        try {
+            const response = await axios.get(`https://frontend-interview.evidentinsights.com/album_covers/${albumId}/`);
+            return response.data.coverImageUrl; // Assuming this is the correct response structure
+        } catch (error) {
+            console.error('Error fetching album cover:', error);
+            return ''; // Return a fallback or default image URL
+        }
+    };
+
+    const selectRandomAlbum = async () => {
+        const randomIndex = Math.floor(Math.random() * albums.length);
+        const selectedAlbum = albums[randomIndex];
+        const coverImageUrl = await fetchAlbumCover(selectedAlbum.id); // Fetch and wait for cover image URL
+        setCurrentAlbum({ ...selectedAlbum, coverImageUrl }); // Combine album info with cover URL
     };
 
     const handleGuess = (guess) => {

@@ -1,5 +1,6 @@
 import axios from 'axios';
-import {GameProvider} from '../components/GameProvider';
+import {GameProvider} from './context/GameProvider';
+import Game from '../components/Game';
 
 export async function getStaticProps(){
   let albumData = [];
@@ -23,6 +24,7 @@ const HomePage = ({ albums }) => {
   return (
     <GameProvider albums={albums}>
       <div>Home page</div>
+      <Game/>
     </GameProvider>
   );
 };
