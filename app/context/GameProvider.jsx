@@ -1,4 +1,7 @@
+"use client"
 import {createContext, useState, useContext, useEffect} from 'react';
+import axios from 'axios';
+
 
 const GameContext = createContext();
 
@@ -18,7 +21,7 @@ export const GameProvider = ({albums, children}) => {
         }
     };
 
-    const selectRandomAlbum = async () => {
+    const selectRandomAlbum = async (albums) => {
         const randomIndex = Math.floor(Math.random() * albums.length);
         const selectedAlbum = albums[randomIndex];
         const coverImageUrl = await fetchAlbumCover(selectedAlbum.id); // Fetch and wait for cover image URL
@@ -35,14 +38,17 @@ export const GameProvider = ({albums, children}) => {
         }
     }
 
-    const nextRound = () => {
+    const nextRound = (albums) => {
         setIsCorrect(false);
-        selectRandomAlbum();
+        selectRandomAlbum(albums);
     }
 
     useEffect(() => {
-        selectRandomAlbum();
-    }, [])
+        if (albums && albums.length > 0) {
+            selectRandomAlbum(albums);
+        }
+    }, [albums]); // Add albums as a dependency
+    
 
     return (
         <GameContext.Provider

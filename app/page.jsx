@@ -1,32 +1,21 @@
-import axios from 'axios';
-import {GameProvider} from './context/GameProvider';
+import { fetchAlbums } from '../components/AlbumsFetcher.server';
+import { GameProvider } from './context/GameProvider';
 import Game from '../components/Game';
+import {Suspense} from 'react'
 
-export async function getStaticProps(){
-  let albumData = [];
-  try {
-    const response = await axios.get('https://frontend-interview.evidentinsights.com/');
-    albumData = response.data.albums
-  } catch (error) {
-    console.error('Error fetching albums:', error);
-    // Handle error appropriately
-  }
-
-  return {
-    props: {
-      albums: albumData,
-    },
-    revalidate: 86400, // or any other appropriate time
-  };
-};
-
-const HomePage = ({ albums }) => {
+function AlbumsContainer() {
+  const albums = fetchAlbums(); // This needs to be adjusted to work with Suspense, usually via a hook or a library
   return (
     <GameProvider albums={albums}>
-      <div>Home page</div>
-      <Game/>
+      <Game />
     </GameProvider>
   );
-};
+}
 
-export default HomePage;
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AlbumsContainer />
+    </Suspense>
+  );
+}

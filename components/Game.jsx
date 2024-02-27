@@ -1,5 +1,6 @@
+"use client"
 import {useState} from 'react';
-import {useGame} from '../context/GameProvider';
+import {useGame} from '../app/context/GameProvider';
 
 const Game = () => {
     const {currentAlbum, handleGuess, nextRound, isCorrect, userGuesses, roundsPlayed} = useGame();
