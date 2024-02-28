@@ -1,21 +1,20 @@
-import { fetchAlbums } from '../components/AlbumsFetcher.server';
 import { GameProvider } from './context/GameProvider';
 import Game from '../components/Game';
-import {Suspense} from 'react'
+import axios from 'axios';
 
-function AlbumsContainer() {
-  const albums = fetchAlbums(); // This needs to be adjusted to work with Suspense, usually via a hook or a library
-  return (
-    <GameProvider albums={albums}>
-      <Game />
-    </GameProvider>
-  );
-}
-
-export default function HomePage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <AlbumsContainer />
-    </Suspense>
-  );
+export default async function HomePage() {
+  try {
+    const response = await axios.get('https://frontend-interview.evidentinsights.com/');
+    const albums = response.data.albums;
+    return (
+      <GameProvider albums={albums}> 
+        <Game /> 
+      </GameProvider>
+    );
+  } catch (error) {
+    console.error('Error fetching albums:', error);
+    return (
+      <div>Failed to load albums. Please try again later.</div> 
+    );
+  }
 }

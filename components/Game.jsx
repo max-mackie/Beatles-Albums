@@ -1,9 +1,10 @@
 "use client"
 import {useState} from 'react';
 import {useGame} from '../app/context/GameProvider';
+import ImageCard from './ImageCard';
 
 const Game = () => {
-    const {currentAlbum, handleGuess, nextRound, isCorrect, userGuesses, roundsPlayed} = useGame();
+    const {albums, albumOptions, currentAlbum, handleGuess, nextRound, isCorrect, userGuesses, roundsPlayed} = useGame();
     const [selectedOption, setSelectedOption] = useState('');
 
     const submitGuess = () => {
@@ -11,14 +12,18 @@ const Game = () => {
         setSelectedOption('')
     }
 
+    const moveToNextRound = () => {
+        nextRound(albums)
+    }
+
     const handleOptionChange = (event) => {
         setSelectedOption(event.target.value);
     };
 
     const renderOptions = () => {
-        const options = currentAlbum ? ['Option 1', 'Option 2', currentAlbum.name] : [];
-        return options.map((option, index) => {
-            <label key={index}> //check if this is best practice
+        const options = currentAlbum ? albumOptions : [];
+        return options.map((option, index) => (
+            <label key={index}>
                 <input
                     type="radio"
                     name="albumOption"
@@ -28,18 +33,25 @@ const Game = () => {
                 />
                 {option}
             </label>
-        });
+        ));
     };
 
     return (
         <div>
             <h2>Guess the Album</h2>
-            {currentAlbum && <img src={currentAlbum.coverImageUrl} alt='Album cover' />}
+            <ImageCard/>
             <div>{renderOptions()}</div>
             <button onClick={submitGuess} disabled={!selectedOption}>Submit Guess</button>
             {isCorrect !== null && (
                 <div>
-                    {isCorrect ? <p>Correct! The album is {currentAlbum.name}.</p> : <p>Wrong guess. Try again!</p>}
+                    {isCorrect ? (
+                        <div>
+                            <p>Correct! The album is {currentAlbum.name}.</p>
+                            <button onClick={moveToNextRound}>Next Question</button>
+                        </div>
+                    ) : (
+                        <p>Wrong guess. Try again!</p>
+                    )}
                 </div>
             )}
             <div>
