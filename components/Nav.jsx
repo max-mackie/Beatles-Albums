@@ -16,6 +16,7 @@ const Nav = () => {
           width={60}
           height={60}
           className="object-contain"
+          priority
         />
         <span className="logo_text">BeatleMania</span>
       </Link>

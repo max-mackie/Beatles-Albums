@@ -34,7 +34,7 @@ export default function RegisterForm() {
 
   return (
     <section className="w-full max-w-full sm:max-w-[50%] flex-start flex-col">
-      <h1 className="head_text text-left">
+      <h1 className="head_text text-5xl sm:text-6xl text-left">
         <span className="blue_gradient text-4xl">Register</span>
       </h1>
       <p className="desc text-left max-w-md">
