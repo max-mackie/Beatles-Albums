@@ -77,8 +77,12 @@
   @apply rounded-full border border-black bg-black py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center;
 }
 
-.outline_btn {
-  @apply rounded-full border border-black bg-transparent py-1.5 px-5 text-black transition-all hover:bg-black hover:text-white text-center text-sm font-inter flex items-center justify-center;
+.option_btn {
+  @apply rounded w-full border border-black bg-transparent py-1.5 px-5 text-black transition-all text-center text-sm font-inter flex items-center justify-center;
+}
+
+.selected_option_btn {
+  @apply rounded w-full border-black py-1.5 px-5 bg-black text-white text-center text-sm font-inter flex items-center justify-center;
 }
 
 .head_text {
