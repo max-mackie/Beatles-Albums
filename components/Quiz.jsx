@@ -75,6 +75,7 @@ const Quiz = () => {
 
     return (
         <div className='w-full max-2-2xl flex items-center flex-col gap-7 glassmorphism'>
+            <h1 className='head_text text-xl sm:text-3xl'>Name That Beatles Album!</h1>
             <ImageCard/>
             <div className='flex-col flex-start block gap-1'>
                 {renderOptions()}
@@ -98,7 +99,7 @@ const Quiz = () => {
                 </div>
             )}
             <div className='flex flex-row gap-5'>
-                <p className='inline'>User Guesses: {userGuesses}</p>
+                <p className='inline'>Total Guesses: {userGuesses}</p>
                 <p className='inline'>Rounds played: {roundsPlayed}</p>
             </div>
         </div>
