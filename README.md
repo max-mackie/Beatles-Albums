@@ -79,8 +79,18 @@ npm install
   npm run test:watch
   ```
 
-## Further Enhancements
+## Future Enhancements
 
-- **Screenshots:** Add screenshots of the app in action to give users a visual idea of what to expect.
-- **Feature Roadmap:** Outline upcoming features or improvements to give contributors ideas on how they can help.
+- Improve Layout for Tablet Screens: Optimize the UI for a better experience on tablet devices.
+- Add Next-Auth with Signup Page: Implement authentication to allow user signups and logins.
+- Implement User Data in Database: Store user statistics for personalized feedback.
+- Add Navbar Links to Sign In and Out: Enhance navigation with sign-in/out links.
+- Social Sharing Options: Enable sharing of scores and trivia on social media.
+- Leaderboard Feature: Introduce a leaderboard for a competitive edge.
+- Customizable Quiz Options: Allow users to tailor the quiz experience.
+- Mobile App Version: Expand the game's reach with a mobile app.
+- Interactive Album Explorer: Offer an exploratory feature for Beatles discography.
+- User Feedback System: Collect user feedback to improve the game.
+- Achievements and Badges: Motivate users with a gamification system.
+
 
