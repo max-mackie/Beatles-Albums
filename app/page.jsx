@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 // import axios from 'axios';
 
@@ -70,7 +70,7 @@ export default function RegisterForm() {
         <div className="flex-center mx-3 mb-5 gap-4">
           <button
             type="submit"
-            className="px-5 py-1.5 text-sm bg-primary-orange rounded-full text-white"
+            className="orange_btn"
           >
             Submit
           </button>

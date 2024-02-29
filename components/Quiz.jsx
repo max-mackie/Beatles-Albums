@@ -1,5 +1,5 @@
 "use client"
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {useGame} from '../app/context/GameProvider';
 import ImageCard from './ImageCard';
 
@@ -41,9 +41,9 @@ const Quiz = () => {
             {isCorrect !== null && (
                 <div>
                     {isCorrect ? (
-                        <div className='flex flex-col flex-center'>
+                        <div className='flex-col flex-center'>
                             <p>Correct!</p>
-                            <p className='pb-2'>The album "{currentAlbum.name}" was released in {currentAlbum.year_released}</p>
+                            <p className='pb-2'>The album &quot;{currentAlbum.name}&quot; was released in {currentAlbum.year_released}</p>
                             <button 
                                 onClick={moveToNextRound} 
                                 className='px-5 py-1.5 rounded text-sm bg-primary-orange rounded-full text-white'

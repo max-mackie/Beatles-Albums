@@ -1,5 +1,5 @@
 import { GameProvider } from '../context/GameProvider';
-import Quiz from '../../components/quiz';
+import Quiz from '../../components/Quiz';
 import axios from 'axios';
 
 export default async function HomePage() {

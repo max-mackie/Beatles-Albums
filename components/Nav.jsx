@@ -1,10 +1,11 @@
+import React from 'react';
 import Link from "next/link";
 import Image from "next/image";
 
 const Nav = () => {
   return (
     <nav className="flex-between w-full mb-4 pt-3">
-      <Link href="/" className="flex gap-2 flex-center">
+      <Link href="/" className=" gap-2 flex-center">
         <Image
           src="/assets/icons/noun-beatles-1840181.svg"
           alt="logo"

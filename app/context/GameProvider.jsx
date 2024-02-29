@@ -1,5 +1,5 @@
 "use client"; 
-import { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 
 const GAME_STATE_KEY = 'beatlesGameState'; 
 
@@ -20,22 +20,22 @@ export const GameProvider = ({ children, albums }) => {
         }
     };
 
-    const selectRandomAlbum = (albums) => {
+    const selectRandomAlbum = useCallback((albums) => {
         const randomIndex = Math.floor(Math.random() * albums.length);
         const selectedAlbum = albums[randomIndex];
         setCurrentAlbum(selectedAlbum);
-
+    
         // Select two random albums different from the current one
         let randomAlbums = albums.filter(a => a.name !== selectedAlbum.name);
         shuffleArray(randomAlbums);
         randomAlbums = randomAlbums.slice(0, 2);
-
+    
         // Combine and shuffle the options
         const options = [selectedAlbum, ...randomAlbums].map(a => a.name);
         shuffleArray(options);
-        console.log(options)
+        console.log(options);
         setAlbumOptions(options); // Set the shuffled options
-    };
+    }, [])
     
     const handleGuess = (guess) => {
         setUserGuesses((prevGuesses) => prevGuesses + 1)
@@ -73,7 +73,7 @@ export const GameProvider = ({ children, albums }) => {
             // setIsInitialStateLoaded(true);
         };
         loadGameState();
-    }, [albums]);
+    }, [albums, selectRandomAlbum]);
 
 
     // Save game state to sessionStorage

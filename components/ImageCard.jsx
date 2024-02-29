@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useGame } from '../app/context/GameProvider';
+import Image from 'next/image';
 
 const ImageCard = () => {
     const { currentAlbum } = useGame();
@@ -44,15 +45,21 @@ const ImageCard = () => {
                 URL.revokeObjectURL(currentAlbumCover);
             }
         };
-    }, [currentAlbum]);
+    }, [currentAlbum]); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (isLoading) {
-        return <div>Loading album cover...</div>;
+        return <section>Loading album cover...</section>;
     }
     return (
-        <div className="">
-            {currentAlbumCover && <img src={currentAlbumCover} alt={`Cover for ${currentAlbum?.name}`} />}
-        </div>
+        <section className="">
+            {currentAlbumCover && 
+                <Image 
+                    src={currentAlbumCover} 
+                    alt={`Cover for ${currentAlbum?.name}`}
+                    width={200}
+                    height={200}
+                />}
+        </section>
     );
 };
 
