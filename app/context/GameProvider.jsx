@@ -1,18 +1,23 @@
-"use client"; 
+"use client";
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 
-const GAME_STATE_KEY = 'beatlesGameState'; 
-
+const GAME_STATE_KEY = 'beatlesGameState';
 const GameContext = createContext();
 
+/**
+ * Provides context for managing the state of the game, including the current album,
+ * user guesses, and rounds played. It also manages the selection of album options for
+ * the game and persists the game state in session storage.
+ */
 export const GameProvider = ({ children, albums }) => {
     const [currentAlbum, setCurrentAlbum] = useState(null);
     const [userGuesses, setUserGuesses] = useState(0);
     const [roundsPlayed, setRoundsPlayed] = useState(0);
     const [isCorrect, setIsCorrect] = useState(null);
     const [albumOptions, setAlbumOptions] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    
+    // Shuffles the given array in-place and returns nothing
     const shuffleArray = (array) => {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -20,88 +25,97 @@ export const GameProvider = ({ children, albums }) => {
         }
     };
 
+    // Selects a random album and prepares album options for the quiz
     const selectRandomAlbum = useCallback((albums) => {
+        if (!albums || !albums.length) return; // Guard clause for empty or undefined albums array
+
         const randomIndex = Math.floor(Math.random() * albums.length);
         const selectedAlbum = albums[randomIndex];
         setCurrentAlbum(selectedAlbum);
-    
-        // Select two random albums different from the current one
+
         let randomAlbums = albums.filter(a => a.name !== selectedAlbum.name);
         shuffleArray(randomAlbums);
         randomAlbums = randomAlbums.slice(0, 2);
-    
-        // Combine and shuffle the options
+
         const options = [selectedAlbum, ...randomAlbums].map(a => a.name);
         shuffleArray(options);
-        console.log(options);
-        setAlbumOptions(options); // Set the shuffled options
-    }, [])
-    
-    const handleGuess = (guess) => {
-        setUserGuesses((prevGuesses) => prevGuesses + 1)
-        if(guess === currentAlbum.name){
-            setIsCorrect(true);
-            setRoundsPlayed((prevRounds) => prevRounds + 1);
-        } else {
-            setIsCorrect(false);
-        }
-    }
+        setAlbumOptions(options);
+    }, []);
 
-    const nextRound = (albums) => {
+    // Handles user's guess and updates game state accordingly
+    const handleGuess = (guess) => {
+        setUserGuesses(prevGuesses => prevGuesses + 1);
+        setIsCorrect(guess === currentAlbum.name);
+        if (guess === currentAlbum.name) {
+            setRoundsPlayed(prevRounds => prevRounds + 1);
+        }
+    };
+
+    // Prepares the next round of the game
+    const nextRound = useCallback(() => {
         setIsCorrect(null);
         selectRandomAlbum(albums);
-    }
+    }, [albums, selectRandomAlbum]);
 
-    // Load initial game state from session storage
+    // Load game state from session storage
     useEffect(() => {
-        const loadGameState = async () => {
+        const loadGameState = () => {
+            setIsLoading(true);
             const storedState = sessionStorage.getItem(GAME_STATE_KEY);
             if (storedState) {
-                const parsedState = JSON.parse(storedState);
-                console.log(parsedState)
-                if (parsedState.currentAlbum && parsedState.currentAlbum.cover_image_id) { // Check if currentAlbum and cover_image_id exist
+                try {
+                    const parsedState = JSON.parse(storedState);
                     setCurrentAlbum(parsedState.currentAlbum);
                     setUserGuesses(parsedState.userGuesses);
                     setRoundsPlayed(parsedState.roundsPlayed);
-                    setAlbumOptions(parsedState.albumOptions)
-                } else {
+                    setAlbumOptions(parsedState.albumOptions);
+                } catch (error) {
+                    console.error('Error loading game state:', error);
+                    // Reset game state to initial values
+                    setCurrentAlbum(null);
+                    setUserGuesses(0);
+                    setRoundsPlayed(0);
+                    setIsCorrect(null);
+                    setAlbumOptions([]);
                     if (albums && albums.length > 0) {
-                    selectRandomAlbum(albums);
+                        selectRandomAlbum(albums);
                     }
                 }
+            } else {
+                selectRandomAlbum(albums); // Initialize game with random album if no stored state
             }
-            // setIsInitialStateLoaded(true);
+            setIsLoading(false);
         };
         loadGameState();
     }, [albums, selectRandomAlbum]);
 
-
-    // Save game state to sessionStorage
+    // Save game state to session storage
     useEffect(() => {
-        const updatedState = { currentAlbum, userGuesses, roundsPlayed, albumOptions}
-        sessionStorage.setItem(GAME_STATE_KEY, JSON.stringify(updatedState));
-    }, [currentAlbum, userGuesses, roundsPlayed, albumOptions]); 
-
+        const gameState = { currentAlbum, userGuesses, roundsPlayed, albumOptions };
+        sessionStorage.setItem(GAME_STATE_KEY, JSON.stringify(gameState));
+    }, [currentAlbum, userGuesses, roundsPlayed, albumOptions]);
 
     return (
-        <GameContext.Provider
-            value={{
-                albums,
-                currentAlbum,
-                userGuesses,
-                roundsPlayed,
-                isCorrect,
-                handleGuess,
-                nextRound,
-                albumOptions,
-            }}
-        >
-            {children} 
+        <GameContext.Provider value={{
+            albums,
+            currentAlbum,
+            userGuesses,
+            roundsPlayed,
+            isCorrect,
+            handleGuess,
+            nextRound,
+            albumOptions,
+            isLoading
+        }}>
+            {children}
         </GameContext.Provider>
     );
 };
 
-// Custom hook to use the game context
+/**
+ * Custom hook for consuming game context.
+ * Throws an error if used outside of GameProvider to ensure proper usage.
+ */
 export const useGame = () => {
     const context = useContext(GameContext);
     if (context === undefined) {
@@ -109,5 +123,3 @@ export const useGame = () => {
     }
     return context;
 };
-
-
